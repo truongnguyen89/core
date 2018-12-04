@@ -1,5 +1,5 @@
 server:
-    port: 9001
+    port: 9002
 
 eureka:
     client:
@@ -23,7 +23,7 @@ spring:
     application:
         name: core
     datasource:
-        url: "jdbc:mysql://localhost:3306/football?characterEncoding=UTF-8"
+        url: "jdbc:mysql://localhost:3306/football?createDatabaseIfNotExist=true&useSSL=false&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8"
         username: root
         password:
         driver-class-name: com.mysql.jdbc.Driver
