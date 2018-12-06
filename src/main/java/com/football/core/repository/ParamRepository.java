@@ -1,4 +1,4 @@
-package com.football.core.service.param;
+package com.football.core.repository;
 
 import com.football.common.model.param.Param;
 import com.football.common.model.param.ParamKey;
