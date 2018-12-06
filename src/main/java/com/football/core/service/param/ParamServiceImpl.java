@@ -13,6 +13,7 @@ import com.football.core.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -26,6 +27,9 @@ import java.util.List;
 public class ParamServiceImpl extends BaseService implements ParamService {
     @Autowired
     ParamRepository paramRepository;
+
+    @Autowired
+    DataSource dataSource;
 
     @Override
     public Param create(Param param) throws Exception {

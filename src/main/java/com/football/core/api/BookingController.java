@@ -3,15 +3,19 @@ package com.football.core.api;
 import com.football.common.constant.Constant;
 import com.football.common.model.stadium.Booking;
 import com.football.common.model.stadium.Stadium;
+import com.football.common.response.Response;
+import com.football.common.util.DateCommon;
 import com.football.core.service.booking.BookingService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -34,9 +38,15 @@ public class BookingController {
 
     @RequestMapping(method = POST)
     @ResponseBody
-    public ResponseEntity<?> create(
-            @Valid @RequestBody Booking booking) throws Exception {
-        return new ResponseEntity<Booking>(bookingService.create(booking), HttpStatus.CREATED);
+    public ResponseEntity<?> booking(
+            @RequestParam(value = "playerId", required = true) long playerId,
+            @RequestParam(value = "matchId", required = true) long matchId,
+            @RequestParam(value = "matchDay", required = true, defaultValue = "") @DateTimeFormat(pattern = Constant.DATE.FORMAT.SHORT_DATE) Date matchDay,
+            @RequestParam(value = "type", required = false) Integer type,
+            @RequestParam(value = "createdUserId", required = true) long createdUserId,
+            @RequestParam(value = "comment", required = false) String comment
+    ) throws Exception {
+        return new ResponseEntity<Response>(bookingService.booking(playerId, matchId, matchDay, type, createdUserId, comment), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/{id}", method = GET)

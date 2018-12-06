@@ -1,8 +1,13 @@
 package com.football.core.service.booking;
 
+import com.football.common.constant.Constant;
 import com.football.common.model.stadium.Booking;
+import com.football.common.response.Response;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,4 +28,6 @@ public interface BookingService {
     Iterable<Booking> findAll() throws Exception;
 
     Booking update(Booking booking) throws Exception;
+
+    Response booking(long playerId, long matchId, Date matchDay, Integer type, long createdUserId, String comment) throws Exception;
 }
