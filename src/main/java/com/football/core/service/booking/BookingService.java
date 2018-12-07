@@ -27,7 +27,9 @@ public interface BookingService {
 
     Iterable<Booking> findAll() throws Exception;
 
-    Booking update(Booking booking) throws Exception;
+    Booking update(long id, Booking booking) throws Exception;
+
+    Response update(long id, int status, long userId, String reason) throws Exception;
 
     Response booking(long playerId, long matchId, Date matchDay, Integer type, long createdUserId, String comment) throws Exception;
 }
