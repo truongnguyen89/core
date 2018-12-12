@@ -32,7 +32,7 @@ public class InitServiceImpl extends BaseService implements InitService {
         long id = System.currentTimeMillis();
         LOGGER.info("[B]---------------------------------INIT---------------------------------");
         //Load param cache
-        List<Param> paramList = paramService.findByStatus(Constant.STATUS_OBJECT.ACTIVE_INT);
+        List<Param> paramList = paramService.findByStatus(Constant.STATUS_OBJECT.ACTIVE);
         if (ArrayListCommon.isNullOrEmpty(paramList))
             LOGGER.error("Param active not found");
         else

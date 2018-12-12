@@ -6,6 +6,7 @@ import com.football.common.constant.TextConstant;
 import com.football.common.database.ConnectionCommon;
 import com.football.common.exception.CommonException;
 import com.football.common.message.MessageCommon;
+import com.football.common.model.match.Match;
 import com.football.common.model.stadium.Booking;
 import com.football.common.model.stadium.BookingLog;
 import com.football.common.model.user.User;
@@ -69,7 +70,7 @@ public class BookingServiceImpl extends BaseService implements BookingService {
             );
         //Validate player, create user, match
         User player = userRepository.findOne(booking.getPlayerId());
-        if (player == null || player.getStatus() != Constant.STATUS_OBJECT.ACTIVE_INT)
+        if (player == null || player.getStatus() != Constant.STATUS_OBJECT.ACTIVE)
             throw new CommonException(Response.NOT_FOUND,
                     MessageCommon.getMessage(
                             TextConstant.MESSAGE.NOT_FOUND_FIELD_OF_OBJECT,
@@ -78,7 +79,7 @@ public class BookingServiceImpl extends BaseService implements BookingService {
                     )
             );
         User creater = userRepository.findOne(booking.getCreatedUserId());
-        if (creater == null || creater.getStatus() != Constant.STATUS_OBJECT.ACTIVE_INT)
+        if (creater == null || creater.getStatus() != Constant.STATUS_OBJECT.ACTIVE)
             throw new CommonException(Response.NOT_FOUND,
                     MessageCommon.getMessage(
                             TextConstant.MESSAGE.NOT_FOUND_FIELD_OF_OBJECT,
@@ -86,8 +87,24 @@ public class BookingServiceImpl extends BaseService implements BookingService {
                             Constant.TABLE.USER
                     )
             );
-
-
+        //Validate match
+        Match match = matchRepository.findOne(booking.getMatchId());
+        if (match == null)
+            throw new CommonException(Response.NOT_FOUND,
+                    MessageCommon.getMessage(
+                            TextConstant.MESSAGE.NOT_FOUND_FIELD_OF_OBJECT,
+                            booking.getCreatedUserId() + "",
+                            Constant.TABLE.USER
+                    )
+            );
+        else if (match.getStatus() != com.football.common.constant.Match.type.FREE.getValue()
+                && match.getStatus() != com.football.common.constant.Match.type.WAITING_CONFIRM.getValue())
+            throw new CommonException(Response.NOT_FOUND,
+                    MessageCommon.getMessage(
+                            TextConstant.MESSAGE.NOT_AVAILABLE,
+                            Constant.TABLE.MATCH
+                    )
+            );
         //</editor-fold>
         Booking bookingNew = bookingRepository.save(booking);
         BookingLog bookingLog = new BookingLog();
