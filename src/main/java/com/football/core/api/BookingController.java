@@ -1,7 +1,6 @@
 package com.football.core.api;
 
 import com.football.common.constant.Constant;
-import com.football.common.constant.Match;
 import com.football.common.exception.CommonException;
 import com.football.common.model.stadium.Booking;
 import com.football.common.response.Response;

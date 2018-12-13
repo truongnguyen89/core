@@ -97,8 +97,8 @@ public class BookingServiceImpl extends BaseService implements BookingService {
                             Constant.TABLE.USER
                     )
             );
-        else if (match.getStatus() != com.football.common.constant.Match.type.FREE.getValue()
-                && match.getStatus() != com.football.common.constant.Match.type.WAITING_CONFIRM.getValue())
+        else if (match.getStatus() != Constant.MATCH.STATUS.FREE
+                && match.getStatus() != Constant.MATCH.STATUS.WAITING_CONFIRM)
             throw new CommonException(Response.NOT_FOUND,
                     MessageCommon.getMessage(
                             TextConstant.MESSAGE.NOT_AVAILABLE,
