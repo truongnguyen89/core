@@ -20,7 +20,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * To change this template use File | Settings | File Templates.
  */
 @RestController
-@RequestMapping(value = "/api/core/init")
+@RequestMapping(value = "init")
 public class InitController {
     private static final Logger LOGGER = LogManager.getLogger(Constant.LOG_APPENDER.CATEGORY);
     @Autowired

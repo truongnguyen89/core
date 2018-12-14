@@ -25,7 +25,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
  * To change this template use File | Settings | File Templates.
  */
 @RestController
-@RequestMapping(value = "/api/core/booking")
+@RequestMapping(value = "booking")
 public class BookingController {
     private static final Logger LOGGER = LogManager.getLogger(Constant.LOG_APPENDER.CATEGORY);
     @Autowired
