@@ -1,9 +1,9 @@
 package com.football.core.service;
 
-import com.football.common.constant.TextConstant;
 import com.football.common.exception.CommonException;
 import com.football.common.message.MessageCommon;
 import com.football.common.response.Response;
+import com.football.common.util.Resource;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -27,7 +27,7 @@ public abstract class BaseService {
 
     public void validate(Object o) {
         if (o == null)
-            throw new CommonException(Response.NOT_FOUND, MessageCommon.getMessage(TextConstant.MESSAGE.IS_NULL, o.getClass().getName()));
+            throw new CommonException(Response.NOT_FOUND, MessageCommon.getMessage(Resource.getMessageResoudrce("param1.is.null"), o.getClass().getName()));
         getValidator().validate(o).stream().findAny().ifPresent(t -> {
             throw new CommonException(Response.NOT_FOUND, t.getMessage());
         });

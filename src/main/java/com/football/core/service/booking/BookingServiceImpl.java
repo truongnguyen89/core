@@ -2,7 +2,6 @@ package com.football.core.service.booking;
 
 import com.football.common.cache.Cache;
 import com.football.common.constant.Constant;
-import com.football.common.constant.TextConstant;
 import com.football.common.database.ConnectionCommon;
 import com.football.common.exception.CommonException;
 import com.football.common.message.MessageCommon;
@@ -11,6 +10,7 @@ import com.football.common.model.stadium.Booking;
 import com.football.common.model.stadium.BookingLog;
 import com.football.common.model.user.User;
 import com.football.common.response.Response;
+import com.football.common.util.Resource;
 import com.football.core.repository.BookingLogRepository;
 import com.football.core.repository.BookingRepository;
 import com.football.core.repository.MatchRepository;
@@ -56,14 +56,14 @@ public class BookingServiceImpl extends BaseService implements BookingService {
         if (booking.getMatchDay().before(new Date()))
             throw new CommonException(Response.BAD_REQUEST,
                     MessageCommon.getMessage(
-                            TextConstant.MESSAGE.INVALID,
+                            Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_FOUND),
                             Constant.TABLE.BOOKING
                     )
             );
         else if (booking.getStatus() != Cache.getIntParamFromCache(Constant.PARAMS.TYPE.BOOKING, Constant.PARAMS.CODE.STATUS_NEW, 1))
             throw new CommonException(Response.BAD_REQUEST,
                     MessageCommon.getMessage(
-                            TextConstant.MESSAGE.INVALID_FIELD_OF_OBJECT,
+                            Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_AVAILABLE_FIELD_OF_OBJECT),
                             Constant.PARAMS.CODE.STATUS,
                             Constant.TABLE.BOOKING
                     )
@@ -73,7 +73,7 @@ public class BookingServiceImpl extends BaseService implements BookingService {
         if (player == null || player.getStatus() != Constant.STATUS_OBJECT.ACTIVE)
             throw new CommonException(Response.NOT_FOUND,
                     MessageCommon.getMessage(
-                            TextConstant.MESSAGE.NOT_FOUND_FIELD_OF_OBJECT,
+                            Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_FOUND_FIELD_OF_OBJECT),
                             booking.getPlayerId() + "",
                             Constant.TABLE.USER
                     )
@@ -82,7 +82,7 @@ public class BookingServiceImpl extends BaseService implements BookingService {
         if (creater == null || creater.getStatus() != Constant.STATUS_OBJECT.ACTIVE)
             throw new CommonException(Response.NOT_FOUND,
                     MessageCommon.getMessage(
-                            TextConstant.MESSAGE.NOT_FOUND_FIELD_OF_OBJECT,
+                            Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_FOUND_FIELD_OF_OBJECT),
                             booking.getCreatedUserId() + "",
                             Constant.TABLE.USER
                     )
@@ -92,7 +92,7 @@ public class BookingServiceImpl extends BaseService implements BookingService {
         if (match == null)
             throw new CommonException(Response.NOT_FOUND,
                     MessageCommon.getMessage(
-                            TextConstant.MESSAGE.NOT_FOUND_FIELD_OF_OBJECT,
+                            Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_FOUND_FIELD_OF_OBJECT),
                             booking.getCreatedUserId() + "",
                             Constant.TABLE.USER
                     )
@@ -101,7 +101,7 @@ public class BookingServiceImpl extends BaseService implements BookingService {
                 && match.getStatus() != Constant.MATCH.STATUS.WAITING_CONFIRM)
             throw new CommonException(Response.NOT_FOUND,
                     MessageCommon.getMessage(
-                            TextConstant.MESSAGE.NOT_AVAILABLE,
+                            Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_AVAILABLE),
                             Constant.TABLE.MATCH
                     )
             );
@@ -142,13 +142,13 @@ public class BookingServiceImpl extends BaseService implements BookingService {
         //<editor-fold defaultstate="collapsed" desc="Validate inut">
         Booking booking = bookingRepository.findOne(id);
         if (booking == null)
-            throw new CommonException(Response.NOT_FOUND, MessageCommon.getMessage(TextConstant.MESSAGE.NOT_FOUND, Constant.TABLE.BOOKING));
+            throw new CommonException(Response.NOT_FOUND, MessageCommon.getMessage(Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_FOUND), Constant.TABLE.BOOKING));
         else {
             int oldStatus = booking.getStatus();
             if (status == oldStatus)
                 throw new CommonException(Response.BAD_REQUEST,
                         MessageCommon.getMessage(
-                                TextConstant.MESSAGE.INVALID_FIELD_OF_OBJECT,
+                                Resource.getMessageResoudrce(Constant.RESOURCE.KEY.INVALID_FIELD_OF_OBJECT),
                                 Constant.PARAMS.CODE.STATUS,
                                 Constant.TABLE.BOOKING
                         )
@@ -158,7 +158,7 @@ public class BookingServiceImpl extends BaseService implements BookingService {
         if (booking.getMatchDay().before(new Date()))
             throw new CommonException(Response.BAD_REQUEST,
                     MessageCommon.getMessage(
-                            TextConstant.MESSAGE.INVALID,
+                            Resource.getMessageResoudrce(Constant.RESOURCE.KEY.INVALID),
                             Constant.TABLE.BOOKING
                     )
             );
