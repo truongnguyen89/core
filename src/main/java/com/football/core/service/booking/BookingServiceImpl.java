@@ -140,6 +140,23 @@ public class BookingServiceImpl extends BaseService implements BookingService {
     @Override
     public Response update(long id, int status, long userId, String reason) throws Exception {
         //<editor-fold defaultstate="collapsed" desc="Validate inut">
+        //validate user and permission
+        User user = userRepository.findOne(userId);
+        if (user == null)
+            throw new CommonException(Response.NOT_FOUND, MessageCommon.getMessage(Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_FOUND), Constant.TABLE.USER));
+        else if (user.getStatus() != Constant.STATUS_OBJECT.ACTIVE)
+            throw new CommonException(Response.INVALID_PERMISSION, MessageCommon.getMessage(Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_AVAILABLE), Constant.TABLE.USER));
+        else if (user.getType() == Constant.USER.TYPE.PLAYER
+                && (status == Constant.BOOKING.STATUS.BOOKED
+                || status == Constant.BOOKING.STATUS.REFUSE
+                || status == Constant.BOOKING.STATUS.REJECT)
+                )
+            throw new CommonException(Response.INVALID_PERMISSION, "Người chơi không thể từ chối lịch đặt sân");
+        else if (user.getType() == Constant.USER.TYPE.MANAGER
+                && (status == Constant.BOOKING.STATUS.CANCEL)
+                )
+            throw new CommonException(Response.INVALID_PERMISSION, "Quản lý phải từ chối lịch đặt sân");
+        //validate booking
         Booking booking = bookingRepository.findOne(id);
         if (booking == null)
             throw new CommonException(Response.NOT_FOUND, MessageCommon.getMessage(Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_FOUND), Constant.TABLE.BOOKING));
@@ -162,9 +179,42 @@ public class BookingServiceImpl extends BaseService implements BookingService {
                             Constant.TABLE.BOOKING
                     )
             );
-        //Validate
+        //Validate match
+        Match match = matchRepository.findOne(booking.getMatchId());
+        if (match == null)
+            throw new CommonException(Response.NOT_FOUND, MessageCommon.getMessage(Resource.getMessageResoudrce(Constant.RESOURCE.KEY.NOT_FOUND), Constant.TABLE.MATCH));
         //</editor-fold>
-        return updateBooking(id, status, userId, reason);
+        return updateBooking(booking, match, status, user, reason);
+    }
+
+    public Response updateBooking(Booking booking, Match match, int newStatus, User user, String reason) throws Exception {
+        long userId = user.getId();
+        if (newStatus == Constant.BOOKING.STATUS.BOOKED) {
+            //get all booking other
+            List<Booking> bookingList = bookingRepository.findByMatchId(booking.getMatchId());
+            for (Booking bookingOther : bookingList) {
+                if (bookingOther.getId() == booking.getId()) {
+                    updateBooking(booking, newStatus, userId, reason);
+                } else {
+                    updateBooking(bookingOther, Constant.BOOKING.STATUS.REJECT, userId, "Lịch đặt sân bị từ chối do " + user.getName() + "(" + user.getUsername() + ") đã đồng ý cho người chơi khác");
+                }
+            }
+        } else
+            updateBooking(booking, newStatus, userId, reason);
+        return Response.OK;
+    }
+
+    public void updateBooking(Booking booking, int newStatus, long userId, String reason) throws Exception {
+        int oldStatus = booking.getStatus();
+        booking.setStatus(newStatus);
+        bookingRepository.save(booking);
+        BookingLog bookingLog = new BookingLog();
+        bookingLog.setBookingId(booking.getId());
+        bookingLog.setStatusOld(oldStatus);
+        bookingLog.setStatusNew(newStatus);
+        bookingLog.setUserId(userId);
+        bookingLog.setReason(reason);
+        bookingLogRepository.save(bookingLog);
     }
 
     public Response updateBooking(long id, int status, long userId, String reason) throws Exception {
