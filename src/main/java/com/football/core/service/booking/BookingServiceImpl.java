@@ -11,6 +11,7 @@ import com.football.common.model.stadium.BookingLog;
 import com.football.common.model.user.User;
 import com.football.common.response.Response;
 import com.football.common.util.Resource;
+import com.football.core.component.NotificationAccess;
 import com.football.core.repository.BookingLogRepository;
 import com.football.core.repository.BookingRepository;
 import com.football.core.repository.MatchRepository;
@@ -49,6 +50,9 @@ public class BookingServiceImpl extends BaseService implements BookingService {
 
     @Autowired
     DataSource dataSource;
+
+    @Autowired
+    NotificationAccess notificationAccess;
 
     @Override
     public Booking create(Booking booking) throws Exception {
@@ -107,13 +111,20 @@ public class BookingServiceImpl extends BaseService implements BookingService {
             );
         //</editor-fold>
         Booking bookingNew = bookingRepository.save(booking);
+        bookingNew.setPlayer(player);
+        bookingNew.setCreater(creater);
+        bookingNew.setMatch(match);
         BookingLog bookingLog = new BookingLog();
         bookingLog.setBookingId(bookingNew.getId());
-        bookingLog.setStatusNew(0);
+        bookingLog.setStatusOld(Constant.BOOKING.STATUS.NEW);
         bookingLog.setStatusNew(bookingNew.getStatus());
-        bookingLog.setReason("booking");
+        bookingLog.setReason(Resource.getMessageResoudrce(Constant.RESOURCE.KEY.BOOKING));
         bookingLog.setUserId(bookingNew.getCreatedUserId());
         bookingLogRepository.save(bookingLog);
+
+        //Gui noti den cac quan ly san bong
+        notificationAccess.sendNotificationToManagerWhenBooking(bookingNew);
+
         return bookingNew;
     }
 
@@ -150,11 +161,11 @@ public class BookingServiceImpl extends BaseService implements BookingService {
                 && (status == Constant.BOOKING.STATUS.BOOKED
                 || status == Constant.BOOKING.STATUS.REFUSE
                 || status == Constant.BOOKING.STATUS.REJECT)
-                )
+        )
             throw new CommonException(Response.INVALID_PERMISSION, "Người chơi không thể từ chối lịch đặt sân");
         else if (user.getType() == Constant.USER.TYPE.MANAGER
                 && (status == Constant.BOOKING.STATUS.CANCEL)
-                )
+        )
             throw new CommonException(Response.INVALID_PERMISSION, "Quản lý phải từ chối lịch đặt sân");
         //validate booking
         Booking booking = bookingRepository.findOne(id);
