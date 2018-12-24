@@ -207,7 +207,7 @@ public class BookingServiceImpl extends BaseService implements BookingService {
                 if (bookingOther.getId() == booking.getId()) {
                     updateBooking(booking, newStatus, userId, reason);
                 } else {
-                    updateBooking(bookingOther, Constant.BOOKING.STATUS.REJECT, userId, "Lịch đặt sân bị từ chối do " + user.getName() + "(" + user.getUsername() + ") đã đồng ý cho người chơi khác");
+                    updateBooking(bookingOther, Constant.BOOKING.STATUS.REJECT, userId, "Lịch đặt sân bị từ chối do " + user.getName() + "(" + user.getEmail() + ") đã đồng ý cho người chơi khác");
                 }
             }
         } else
