@@ -1,7 +1,7 @@
 package com.football.core.service.booking;
 
 import com.football.common.model.stadium.BookingLog;
-import com.football.core.repository.BookingLogRepository;
+import com.football.common.repository.BookingLogRepository;
 import com.football.core.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

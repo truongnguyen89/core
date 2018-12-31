@@ -5,10 +5,10 @@ import com.football.common.exception.CommonException;
 import com.football.common.message.MessageCommon;
 import com.football.common.model.param.Param;
 import com.football.common.model.param.ParamKey;
+import com.football.common.repository.ParamRepository;
 import com.football.common.response.Response;
 import com.football.common.util.Resource;
 import com.football.common.util.StringCommon;
-import com.football.core.repository.ParamRepository;
 import com.football.core.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class ParamServiceImpl extends BaseService implements ParamService {
                 || StringCommon.isNullOrBlank(param.getParamKey().getType())
                 || StringCommon.isNullOrBlank(param.getParamKey().getCode())
                 || StringCommon.isNullOrBlank(param.getValue())
-                )
+        )
             throw new CommonException(Response.BAD_REQUEST, MessageCommon.getMessage(Resource.getMessageResoudrce(Constant.RESOURCE.KEY.IS_NULL), Constant.TABLE.PARAM));
         else {
             //Check param exist
@@ -71,7 +71,7 @@ public class ParamServiceImpl extends BaseService implements ParamService {
                 || param.getParamKey() == null
                 || StringCommon.isNullOrBlank(param.getParamKey().getType())
                 || StringCommon.isNullOrBlank(param.getParamKey().getCode())
-                )
+        )
             throw new CommonException(Response.BAD_REQUEST, MessageCommon.getMessage(Resource.getMessageResoudrce(Constant.RESOURCE.KEY.IS_NULL), Constant.TABLE.PARAM));
         else {
             Param paramOld = paramRepository.findOne(param.getParamKey());

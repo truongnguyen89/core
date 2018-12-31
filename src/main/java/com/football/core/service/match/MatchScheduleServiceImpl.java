@@ -1,8 +1,8 @@
 package com.football.core.service.match;
 
-import com.football.core.repository.MatchScheduleRepository;
-import com.football.core.service.BaseService;
 import com.football.common.model.match.MatchSchedule;
+import com.football.common.repository.MatchScheduleRepository;
+import com.football.core.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
